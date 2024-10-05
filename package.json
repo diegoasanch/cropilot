@@ -5,8 +5,8 @@
 	"main": "src/index.ts",
 	"type": "module",
 	"scripts": {
-		"build": "esbuild src/index.ts --bundle --platform=node --target=node22 --outfile=dist/index.cjs",
-		"start": "node dist/index.cjs",
+		"build": "node esbuild.config.js",
+		"start": "node dist/index.mjs",
 		"dev": "nodemon --watch 'src/**' --ext 'ts,json' --ignore 'src/**/*.test.ts' --exec \"pnpm run build && pnpm run start\"",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
@@ -16,7 +16,9 @@
 	"dependencies": {
 		"@t3-oss/env-core": "^0.11.1",
 		"dotenv": "^16.4.5",
+		"drizzle-orm": "^0.33.0",
 		"fastify": "^5.0.0",
+		"pg": "^8.13.0",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
@@ -24,6 +26,8 @@
 		"@swc/cli": "0.4.1-nightly.20240914",
 		"@swc/core": "^1.7.26",
 		"@types/node": "22",
+		"@types/pg": "^8.11.10",
+		"drizzle-kit": "^0.24.2",
 		"esbuild": "^0.24.0",
 		"nodemon": "^3.1.7",
 		"typescript": "^5.6.2"
