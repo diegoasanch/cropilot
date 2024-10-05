@@ -1,0 +1,27 @@
+{
+  "name": "cropilot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "swc src/index.ts -o dist/index.js --source-maps",
+    "start": "node dist/index.js",
+    "dev": "nodemon --watch 'src/**' --ext 'ts,json' --ignore 'src/**/*.test.ts' --exec \"pnpm run build && pnpm run start\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^5.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.3",
+    "@swc/cli": "0.4.1-nightly.20240914",
+    "@swc/core": "^1.7.26",
+    "@types/node": "22",
+    "nodemon": "^3.1.7",
+    "typescript": "^5.6.2"
+  }
+}
