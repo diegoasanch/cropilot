@@ -25,9 +25,7 @@ async function startServer() {
     reply.send(users);
   });
   fastify.get("/temporal", async (request, reply) => {
-    const temporalApi = new TemporalApi(env.TEMPORAL_API_BASE_URL);
-    const temporalDataQuery = queryTemporalData(temporalApi);
-
+   // STAGE 1: FORMAT INPUT
     const userMessage =
       "Quiero hacer una siembra de papa el proximo mes de noviembre en estas coordenadas  9.353614 -70.316381";
 
@@ -35,6 +33,15 @@ async function startServer() {
 
     if (!interpretedUserMessage)
       throw new Error("ERROR FORMATTING USER MESSAGE");
+
+    if(interpretedUserMessage.status === "needs_more_info")throw new Error("Message Incomplete: " + interpretedUserMessage.message)
+    
+    
+    
+    // STAGE 2: RETRIEVE NASA DATA
+    const temporalApi = new TemporalApi(env.TEMPORAL_API_BASE_URL);
+    const temporalDataQuery = queryTemporalData(temporalApi);
+
 
     const nasaMeasurements = await temporalDataQuery({
       parameters: [
@@ -47,8 +54,8 @@ async function startServer() {
         EClimateParameters.GWETROOT, // Root Zone Soil Wetness (1)
         EClimateParameters.GWETPROF, // Profile Soil Moisture (1)
       ],
-      latitude: interpretedUserMessage.location.latitude,
-      longitude: interpretedUserMessage.location.longitude,
+      latitude: interpretedUserMessage.intention.location.latitude,
+      longitude: interpretedUserMessage.intention.location.longitude,
       start: new Date(2000, 1, 1),
       end: new Date(),
       interval: "daily",
@@ -56,15 +63,16 @@ async function startServer() {
 
     if (!nasaMeasurements) throw new Error("FAILED TO RETRIEVE DATA FROM NASA");
 
-    const stages = interpretedUserMessage.stages;
+    const stages = interpretedUserMessage.intention.stages;
 
     const measurementsGroupedByStage = groupAndAverageMeasurementsByStages(
       stages,
       nasaMeasurements
     );
 
+    // STAGE 3: ANSWER
     const answer = await interpretViabilityForCropSowing(
-      interpretedUserMessage,
+      interpretedUserMessage.intention,
       {
         ...measurementsGroupedByStage,
       }
