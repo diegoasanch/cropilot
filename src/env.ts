@@ -7,6 +7,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     TEMPORAL_API_BASE_URL: z.string().url(),
     OPENAI_API_KEY: z.string(),
+    PORT: z.string().transform((val) => Number.parseInt(val)),
   },
   clientPrefix: "PUBLIC_",
   client: {},
