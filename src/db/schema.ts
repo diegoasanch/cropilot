@@ -11,7 +11,7 @@ import { relations } from "drizzle-orm";
 
 export const user = pgTable("user", {
 	id: serial("id").primaryKey(),
-	phone: varchar("phone", { length: 256 }).notNull().unique(),
+	externalId: varchar("external_id", { length: 256 }).notNull().unique(),
 	fullName: text("full_name").notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	updatedAt: timestamp("updated_at")

@@ -15,6 +15,13 @@
       "when": 1728174226103,
       "tag": "0001_fixed_blindfold",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1728253590020,
+      "tag": "0002_equal_zodiak",
+      "breakpoints": true
     }
   ]
 }
