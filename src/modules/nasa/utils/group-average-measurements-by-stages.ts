@@ -1,4 +1,5 @@
 import { Stage } from "@/modules/llm/use-cases/interpret-user-messages/t-interpret-user-message.js";
+import { EClimateParameters } from "../infra/t-temporal-api.js";
 
 // Represents the NASA measurements.
 interface NasaMeasurements {
@@ -54,9 +55,7 @@ export function groupAndAverageMeasurementsByStages(
 
     // Iterate over the dates and accumulate parameter values within the stage's months.
     for (const dateStr in dateParameterMap) {
-      const year = parseInt(dateStr.substring(0, 4));
       const month = parseInt(dateStr.substring(4, 6));
-      const day = parseInt(dateStr.substring(6, 8));
 
       // Handle stages that span over the year end (e.g., December to February).
       const isWithinStage = isDateWithinStage(month, start_month, end_month);
@@ -79,7 +78,11 @@ export function groupAndAverageMeasurementsByStages(
     const averages: { [param: string]: number } = {};
     for (const param in paramSums) {
       averages[param] = Number(
-        (paramSums[param] / paramCounts[param]).toFixed(2)
+        (
+          (paramSums[param] *
+            (param === EClimateParameters.PRECTOTCORR ? 30 : 1)) /
+          paramCounts[param]
+        ).toFixed(2)
       );
     }
 

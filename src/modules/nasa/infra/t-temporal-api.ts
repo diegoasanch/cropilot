@@ -44,3 +44,14 @@ export type TGetWeatherPointDataParams = {
   end: Date;
   interval: "daily";
 };
+
+export enum EClimateParameters {
+  T2M = "T2M",
+  TS = "TS",
+  PRECTOTCORR = "PRECTOTCORR",
+  QV2M = "QV2M",
+  WS2M = "WS2M",
+  GWETTOP = "GWETTOP",
+  GWETROOT = "GWETROOT", // Root Zone Soil Wetness (1)
+  GWETPROF = "GWETPROF",
+}
