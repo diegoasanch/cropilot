@@ -1,13 +1,9 @@
 import Fastify from "fastify";
 import { env } from "@/env.js";
 import { queryTemporalData } from "./modules/nasa/use-cases/temporal-query.js";
-import {
-  TGetWeatherPointDataParams,
-  TClimateData,
-  TTimeSeriesData,
-} from "./modules/nasa/infra/t-temporal-api.js";
+
 import { TemporalApi } from "./modules/nasa/infra/temporal-api.js";
-import { average } from "./utils/average.js";
+
 import { interpretUserMessage } from "./modules/llm/use-cases/interpret-user-messages/interpret-user-message.js";
 import { groupAndAverageMeasurementsByStages } from "./modules/nasa/utils/group-average-measurements-by-stages.js";
 import { interpretViabilityForCropSowing } from "./modules/llm/use-cases/interpret-viability-for-crop-sowing/interpret-viavility-for-crop-sowing.js";
