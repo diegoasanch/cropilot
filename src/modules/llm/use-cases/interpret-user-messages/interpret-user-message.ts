@@ -1,12 +1,12 @@
 import { env } from "@/env.js";
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { ChatOpenAI } from "@langchain/openai";
-import { ModelAnswer } from "./t-interpret-user-message.js";
+import { InterpretedUserMessage } from "./t-interpret-user-message.js";
 import { interpretUserMessagePrompt } from "./interpret-user-message-prompt.js";
 
 export async function interpretUserMessage(
   userMessage: string
-): Promise<ModelAnswer | undefined> {
+): Promise<InterpretedUserMessage | undefined> {
   const formattedPrompt = await interpretUserMessagePrompt.format({
     userMessage,
   });
@@ -25,7 +25,9 @@ export async function interpretUserMessage(
 
     const response = await model.invoke(messages);
 
-    return (await JSON.parse(response.content.toString())) as ModelAnswer;
+    return (await JSON.parse(
+      response.content.toString()
+    )) as InterpretedUserMessage;
   } catch (e) {
     console.error(e);
   }

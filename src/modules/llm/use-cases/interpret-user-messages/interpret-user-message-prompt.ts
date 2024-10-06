@@ -23,8 +23,8 @@ export const interpretUserMessagePrompt = new PromptTemplate({
         "stages": [
           {{
             "stage": "...",
-            "start_month": "...",
-            "end_month": "...",
+            "start_month": "number 1-12",
+            "end_month": "number 1-12",
             "optimal_conditions": {{
               "T2M": ...,
               "TS": ...,

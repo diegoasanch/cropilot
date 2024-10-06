@@ -1,4 +1,4 @@
-export type ModelAnswer = {
+export type InterpretedUserMessage = {
   location: {
     latitude: number;
     longitude: number;
@@ -11,8 +11,8 @@ export type ModelAnswer = {
 
 export type Stage = {
   stage: string;
-  start_month: string; // Could be a number (1-12) or a string representing the month
-  end_month: string; // Same as above
+  start_month: number;
+  end_month: number;
   optimal_conditions: OptimalConditions;
 };
 
