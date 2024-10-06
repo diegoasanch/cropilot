@@ -1,14 +1,6 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import pkg from "pg";
 import { env } from "@/env.js";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 
-const { Client } = pkg;
-
-const client = new Client({
-	connectionString: env.DATABASE_URL,
-});
-
-export async function initDb() {
-	await client.connect();
-	return drizzle(client);
-}
+const sql = neon(env.DATABASE_URL);
+export const db = drizzle(sql);

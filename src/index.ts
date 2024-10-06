@@ -1,11 +1,9 @@
 import Fastify from "fastify";
-import { initDb } from "./db/db.js";
+import { db } from "./db/db.js";
 import { user } from "./db/schema.js";
 import { env } from "./env.js";
 
 async function startServer() {
-	const db = await initDb();
-
 	const fastify = Fastify({
 		logger: true,
 	});
