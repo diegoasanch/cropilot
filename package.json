@@ -8,7 +8,9 @@
 		"build": "node esbuild.config.js",
 		"start": "node dist/index.mjs",
 		"dev": "nodemon --watch 'src/**' --ext 'ts,json' --ignore 'src/**/*.test.ts' --exec \"pnpm run build && pnpm run start\"",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"generate": "drizzle-kit generate",
+		"migrate": "drizzle-kit migrate"
 	},
 	"keywords": [],
 	"author": "",
@@ -19,6 +21,7 @@
 		"drizzle-orm": "^0.33.0",
 		"fastify": "^5.0.0",
 		"pg": "^8.13.0",
+		"postgres": "^3.4.4",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {

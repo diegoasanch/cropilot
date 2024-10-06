@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@neondatabase/serverless':
-        specifier: ^0.9.5
-        version: 0.9.5
       '@t3-oss/env-core':
         specifier: ^0.11.1
         version: 0.11.1(typescript@5.6.2)(zod@3.23.8)
@@ -19,13 +16,16 @@ importers:
         version: 16.4.5
       drizzle-orm:
         specifier: ^0.33.0
-        version: 0.33.0(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0)
+        version: 0.33.0(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4)
       fastify:
         specifier: ^5.0.0
         version: 5.0.0
       pg:
         specifier: ^8.13.0
         version: 8.13.0
+      postgres:
+        specifier: ^3.4.4
+        version: 3.4.4
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -1433,6 +1433,10 @@ packages:
   postgres-range@1.1.4:
     resolution: {integrity: sha512-i/hbxIE9803Alj/6ytL7UHQxRvZkI9O4Sy+J3HGc4F4oo/2eQAjTSNJ0bfxyse3bH0nuVesCk+3IRLaMtG3H6w==}
 
+  postgres@3.4.4:
+    resolution: {integrity: sha512-IbyN+9KslkqcXa8AO9fxpk97PA4pzewvpi2B3Dwy9u4zpV32QicaEdgmF3eSQUzdRk7ttDHQejNgAEr4XoeH4A==}
+    engines: {node: '>=12'}
+
   process-warning@4.0.0:
     resolution: {integrity: sha512-/MyYDxttz7DfGMMHiysAsFE4qF+pQYAA8ziO/3NcRVrQ5fSk+Mns4QZA/oRPFzvcqNoVJXQNWNAsdwBXLUkQKw==}
 
@@ -2028,6 +2032,7 @@ snapshots:
   '@neondatabase/serverless@0.9.5':
     dependencies:
       '@types/pg': 8.11.6
+    optional: true
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -2150,6 +2155,7 @@ snapshots:
       '@types/node': 22.7.4
       pg-protocol: 1.7.0
       pg-types: 4.0.2
+    optional: true
 
   '@types/responselike@1.0.3':
     dependencies:
@@ -2301,11 +2307,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.33.0(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0):
+  drizzle-orm@0.33.0(@neondatabase/serverless@0.9.5)(@types/pg@8.11.10)(pg@8.13.0)(postgres@3.4.4):
     optionalDependencies:
       '@neondatabase/serverless': 0.9.5
       '@types/pg': 8.11.10
       pg: 8.13.0
+      postgres: 3.4.4
 
   end-of-stream@1.4.4:
     dependencies:
@@ -2793,6 +2800,8 @@ snapshots:
   postgres-interval@3.0.0: {}
 
   postgres-range@1.1.4: {}
+
+  postgres@3.4.4: {}
 
   process-warning@4.0.0: {}
 
