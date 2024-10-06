@@ -1,15 +1,15 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
-    image: postgres:15
+    image: postgres:16
     container_name: cropilot_db
     environment:
       POSTGRES_DB: cropilot
       POSTGRES_USER: cropilot_user
       POSTGRES_PASSWORD: cropilot_local
     ports:
-      - "5432:5432"
+      - "5431:5432"
     volumes:
       - cropilot_data:/var/lib/postgresql/data
     restart: unless-stopped
