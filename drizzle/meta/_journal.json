@@ -8,6 +8,13 @@
       "when": 1728172331471,
       "tag": "0000_daffy_the_stranger",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1728174226103,
+      "tag": "0001_fixed_blindfold",
+      "breakpoints": true
     }
   ]
 }
