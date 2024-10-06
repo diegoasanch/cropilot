@@ -35,3 +35,12 @@ export type TClimateData = {
   };
   messages: string[]; // Any messages associated with the data retrieval
 };
+
+export type TGetWeatherPointDataParams = {
+  parameters: (keyof TClimateParameters)[];
+  latitude: number;
+  longitude: number;
+  start: Date;
+  end: Date;
+  interval: "daily";
+};

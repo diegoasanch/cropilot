@@ -1,5 +1,9 @@
 import dayjs from "dayjs";
-import { TClimateData, TTimeSeriesData } from "./t-temporal-api.js";
+import {
+  TClimateData,
+  TGetWeatherPointDataParams,
+  TTimeSeriesData,
+} from "./t-temporal-api.js";
 
 interface FilterCriteria {
   year?: string;
@@ -7,7 +11,7 @@ interface FilterCriteria {
   day?: string;
 }
 
-export class NasaApi {
+export class TemporalApi {
   constructor(private readonly baseUrl: string) {}
 
   private dateFormat = "YYYYMMDD";
@@ -27,30 +31,26 @@ export class NasaApi {
     return this.parameterNames[key] ?? "Unknown parameter";
   }
 
-  public async getWeatherPointData(
-    params: string[],
-    latitude: number,
-    longitude: number,
-    start: Date,
-    end: Date,
-    interval: "daily"
-  ) {
+  public async getWeatherPointData(params: TGetWeatherPointDataParams) {
     try {
+      const joinedParams = params.parameters.join(",");
+
       const searchParams = new URLSearchParams({
-        params: params.join(","),
-        latitude: latitude.toString(),
-        longitude: longitude.toString(),
-        start: dayjs(start).format(this.dateFormat),
-        end: dayjs(end).format(this.dateFormat),
+        latitude: params.latitude.toString(),
+        longitude: params.longitude.toString(),
+        start: dayjs(params.start).format(this.dateFormat),
+        end: dayjs(params.end).format(this.dateFormat),
+        format: "JSON",
+        community: "AG",
       });
 
-      const url = `${
-        this.baseUrl
-      }/temporal/${interval}/point?${searchParams.toString()}`;
-
+      const url = `${this.baseUrl}temporal/${
+        params.interval
+      }/point?parameters=${joinedParams}&${searchParams.toString()}`;
+      console.log(url);
       const response = await fetch(url);
       const json = await response.json();
-
+      console.log(json);
       return json as TClimateData;
     } catch (error) {
       console.error("Error fetching weather data:", error);
@@ -79,7 +79,7 @@ export class NasaApi {
       const matchesDay = !criteria.day || dateDay === criteria.day;
 
       // Simplified condition where all must match if provided
-      if (matchesYear && matchesMonth && matchesDay) {
+      if (matchesYear && matchesMonth && matchesDay && data[date] !== -999) {
         filteredData[date] = data[date];
       }
     }
