@@ -15,6 +15,27 @@
       "when": 1728174226103,
       "tag": "0001_fixed_blindfold",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1728253590020,
+      "tag": "0002_equal_zodiak",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1728257945203,
+      "tag": "0003_equal_bill_hollister",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1728258830841,
+      "tag": "0004_fair_marvel_apes",
+      "breakpoints": true
     }
   ]
 }

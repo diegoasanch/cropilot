@@ -1,0 +1,23 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Debug Cropilot",
+			"skipFiles": ["<node_internals>/**"],
+			"program": "${workspaceFolder}/src/index.ts",
+			"preLaunchTask": "npm: build",
+			"outFiles": ["${workspaceFolder}/dist/**/*.mjs"],
+			"sourceMaps": true,
+			"resolveSourceMapLocations": [
+				"${workspaceFolder}/**",
+				"!**/node_modules/**"
+			],
+			"env": {
+				"NODE_ENV": "development"
+			},
+			"console": "integratedTerminal"
+		}
+	]
+}
