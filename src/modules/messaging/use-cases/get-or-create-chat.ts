@@ -20,7 +20,6 @@ export function getOrCreateChat({
 	return async ({ userExternalId, userFullName }: GetOrCreateChatInput) => {
 		const openChat = await chatsRepository.findOpenConversation(userExternalId);
 		if (openChat) return openChat;
-
 		return chatsRepository.createConversation(userExternalId, userFullName);
 	};
 }

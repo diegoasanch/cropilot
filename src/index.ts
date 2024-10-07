@@ -1,9 +1,6 @@
 import { env } from "./env.js";
-<<<<<<< Updated upstream
 import { getClient } from "./modules/messaging/client.js";
 
-=======
->>>>>>> Stashed changes
 import { Bot } from "grammy";
 
 async function startServer() {
@@ -24,21 +21,31 @@ async function startServer() {
 		ctx.reply("New chat started!");
 	});
 
-	bot.on("message:text", async (ctx) => {
+	bot.on("message", async (ctx) => {
 		console.log(ctx.message);
-		const chat = await messages.getOrCreateChat(ctx.message.from.id.toString());
+		if (!ctx.message.text && !ctx.message.location) return;
+		const type = ctx.message.text ? "text" : "location";
+		const content = ctx.message.text || JSON.stringify(ctx.message.location);
 
-		console.log(chat);
-		ctx.reply("hi");
-		// await messages.sendResponse(ctx.message);
+		const chat = await messages.getChatMessages({
+			userExternalId: ctx.message.from.id.toString(),
+			userFullName: `${ctx.message.from.first_name} ${ctx.message.from.last_name}`,
+		});
+		await messages.saveMessage({
+			content,
+			messageType: type,
+			conversationId: chat.conversationId,
+		});
+
+		let chatHistory = chat.messages.reduce((acc, msg) => {
+			if (msg.system) return acc;
+			return `${acc}\n- user-message:${msg.messageType} ${msg.content}`;
+		}, "");
+		chatHistory += `\n- user-message:${type} ${content}`;
+
+		console.log(chatHistory);
 	});
 
-	bot.on("message:location", (ctx) => {
-		console.log(ctx.message);
-		ctx.reply(`Your location: ${ctx.message.location}`);
-	});
-
-<<<<<<< Updated upstream
 	bot.start();
 
 	// const fastify = Fastify({
@@ -110,29 +117,6 @@ async function startServer() {
 	// 		process.exit(1);
 	// 	}
 	// });
-=======
-	const bot = new Bot(env.TELEGRAM_BOT_TOKEN);
-
-	bot.command("start", (ctx) => {
-		ctx.reply("Welcome to Cropilot!");
-	});
-
-	bot.command("new_chat", (ctx) => {
-		ctx.reply("New chat started!");
-	});
-
-	bot.on("message:text", (ctx) => {
-		console.log(ctx.message);
-		ctx.reply(`You said: ${ctx.message.text}`);
-	});
-
-	bot.on("message:location", (ctx) => {
-		console.log(ctx.message);
-		ctx.reply(`Your location: ${ctx.message.location}`);
-	});
-
-	bot.start();
->>>>>>> Stashed changes
 }
 
 startServer().catch((err) => {

@@ -1,5 +1,5 @@
 import { conversation, message, user } from "@/db/schema.js";
-import type { Message, Conversation } from "@/db/schema.js";
+import type { Message, Conversation, User } from "@/db/schema.js";
 import type { DB } from "@/db/db.js";
 import { eq, and, desc, gt } from "drizzle-orm";
 
@@ -8,6 +8,13 @@ import utc from "dayjs/plugin/utc.js";
 
 dayjs.extend(utc);
 
+export type CreateMessageInput = {
+	content: string;
+	messageType: "text" | "image" | "location";
+	conversationId: number;
+	system?: boolean;
+};
+
 export class ChatsRepository {
 	constructor(private readonly db: DB) {}
 
@@ -15,11 +22,20 @@ export class ChatsRepository {
 		userExternalId: string,
 		fullName: string,
 	): Promise<Conversation> {
-		const [dbUser] = await this.db
-			.insert(user)
-			.values({ externalId: userExternalId, fullName })
-			.onConflictDoNothing()
-			.returning();
+		let dbUser: User;
+		[dbUser] = await this.db
+			.select()
+			.from(user)
+			.where(eq(user.externalId, userExternalId));
+
+		if (!dbUser) {
+			[dbUser] = await this.db
+				.insert(user)
+				.values({ externalId: userExternalId, fullName })
+				.onConflictDoNothing()
+				.returning();
+		}
+
 		if (!dbUser) throw new Error("Error creating user");
 
 		const [newConversation] = await this.db
@@ -44,7 +60,7 @@ export class ChatsRepository {
 					and(
 						eq(user.externalId, userExternalId),
 						eq(conversation.userStopped, false),
-						gt(message.createdAt, dayjs.utc().subtract(5, "minutes").toDate()),
+						gt(message.createdAt, dayjs().subtract(5, "minutes").toDate()),
 					),
 				)
 				.orderBy(desc(message.createdAt))
@@ -72,5 +88,9 @@ export class ChatsRepository {
 			.select()
 			.from(message)
 			.where(eq(message.conversationId, conversationId));
+	}
+
+	async saveMessage(input: CreateMessageInput) {
+		await this.db.insert(message).values(input).onConflictDoNothing();
 	}
 }
