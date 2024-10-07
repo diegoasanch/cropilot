@@ -3,6 +3,7 @@ import { TelegramApi } from "./infra/telegram-api.js";
 import { initDb } from "@/db/db.js";
 import { ChatsRepository } from "./infra/chats.js";
 import { getOrCreateChat } from "./use-cases/get-or-create-chat.js";
+import { closeChat } from "./use-cases/close-chat.js";
 
 const telegramApi = new TelegramApi("TOKEN");
 
@@ -13,5 +14,6 @@ export async function getClient() {
 	return {
 		sendResponse: sendResponse(telegramApi),
 		getOrCreateChat: getOrCreateChat(chatsRepository),
+		closeChat: closeChat(chatsRepository),
 	};
 }

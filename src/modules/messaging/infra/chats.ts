@@ -39,4 +39,11 @@ export class ChatsRepository {
 			return null;
 		}
 	}
+
+	async stopConversation(conversationId: number) {
+		await this.db
+			.update(conversation)
+			.set({ userStopped: true })
+			.where(eq(conversation.id, conversationId));
+	}
 }

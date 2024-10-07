@@ -16,12 +16,12 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"@t3-oss/env-core": "^0.11.1",
-		"dotenv": "^16.4.5",
-		"drizzle-orm": "^0.33.0",
 		"@langchain/core": "^0.3.7",
 		"@langchain/openai": "^0.3.5",
+		"@t3-oss/env-core": "^0.11.1",
 		"dayjs": "^1.11.13",
+		"dotenv": "^16.4.5",
+		"drizzle-orm": "^0.33.0",
 		"fastify": "^5.0.0",
 		"grammy": "^1.30.0",
 		"pg": "^8.13.0",
@@ -37,7 +37,7 @@
 		"drizzle-kit": "^0.24.2",
 		"esbuild": "^0.24.0",
 		"nodemon": "^3.1.7",
-		"typescript": "^5.6.2",
-		"pnpm": "^9.6.0"
+		"pnpm": "^9.6.0",
+		"typescript": "^5.6.2"
 	}
 }
