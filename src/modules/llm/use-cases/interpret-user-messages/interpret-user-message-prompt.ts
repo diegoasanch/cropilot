@@ -15,7 +15,7 @@ export const interpretUserMessagePrompt = new PromptTemplate({
 
       {{
         "status": "needs_more_info",
-         "message": "..." // Specify the missing data, in the same language as the user's message
+         "message": "..." // Specify the missing data, in the same language as the user's message and give a friendly explanation on what you are good for given this prompt
       }}
 
       Also, provide the optimal climate data for the different stages of the crop and the dates of each stage.
