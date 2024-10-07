@@ -1,8 +1,8 @@
 import { PromptTemplate } from "@langchain/core/prompts";
 
 export const interpretUserMessagePrompt = new PromptTemplate({
-  inputVariables: ["userMessage"],
-  template: `
+	inputVariables: ["userMessage"],
+	template: `
       You are an assistant that extracts agricultural information from user messages.
       Given the user's message: "{userMessage}"
       Extract the following information:
@@ -20,7 +20,7 @@ export const interpretUserMessagePrompt = new PromptTemplate({
 
       Also, provide the optimal climate data for the different stages of the crop and the dates of each stage.
       Output the result as a JSON object with the following structure:
-      
+
       {{
       "status": "success",
       "intention": {{

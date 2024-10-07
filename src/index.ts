@@ -2,18 +2,18 @@ import { env } from "./env.js";
 import { interpretUserMessage } from "./modules/llm/use-cases/interpret-user-messages/interpret-user-message.js";
 import { getClient } from "./modules/messaging/client.js";
 
-import { TemporalApi } from "./modules/nasa/infra/temporal-api.js";
+// import { TemporalApi } from "./modules/nasa/infra/temporal-api.js";
 import { Bot } from "grammy";
-import { queryTemporalData } from "./modules/nasa/use-cases/temporal-query.js";
-import { EClimateParameters } from "./modules/nasa/infra/t-temporal-api.js";
-import { groupAndAverageMeasurementsByStages } from "./modules/nasa/utils/group-average-measurements-by-stages.js";
-import { interpretViabilityForCropSowing } from "./modules/llm/use-cases/interpret-viability-for-crop-sowing/interpret-viavility-for-crop-sowing.js";
+// import { queryTemporalData } from "./modules/nasa/use-cases/temporal-query.js";
+// import { EClimateParameters } from "./modules/nasa/infra/t-temporal-api.js";
+// import { groupAndAverageMeasurementsByStages } from "./modules/nasa/utils/group-average-measurements-by-stages.js";
+// import { interpretViabilityForCropSowing } from "./modules/llm/use-cases/interpret-viability-for-crop-sowing/interpret-viavility-for-crop-sowing.js";
 
 async function startServer() {
 	// const db = await initDb();
 	const messages = await getClient();
-
 	const bot = new Bot(env.TELEGRAM_BOT_TOKEN);
+	console.log("Starting bot...");
 
 	bot.command("start", async (ctx) => {
 		ctx.reply("Welcome to Cropilot!");
@@ -50,62 +50,69 @@ async function startServer() {
 		chatHistory += `\n- user-message:${type} ${content}`;
 
 		console.log(chatHistory);
+		ctx.reply("Estoy pensando... Podría tardar hasta un minuto");
 
 		// STAGE 1: FORMAT INPUT
-		const userMessage =
-			"Quiero hacer una siembra de papa el proximo mes de noviembre en estas coordenadas  9.353614 -70.316381";
-
+		const userMessage = chatHistory;
 		const interpretedUserMessage = await interpretUserMessage(userMessage);
+		// console.log("INTERPRETED USER MESSAGE", interpretedUserMessage);
 
-		if (!interpretedUserMessage)
-			throw new Error("ERROR FORMATTING USER MESSAGE");
+		// if (!interpretedUserMessage)
+		// 	throw new Error("ERROR FORMATTING USER MESSAGE");
 
-		if (interpretedUserMessage.status === "needs_more_info")
-			throw new Error(`Message Incomplete: ${interpretedUserMessage.message}`);
+		// if (interpretedUserMessage.status === "needs_more_info")
+		// 	throw new Error(`Message Incomplete: ${interpretedUserMessage.message}`);
 
-		// STAGE 2: RETRIEVE NASA DATA
-		const temporalApi = new TemporalApi(env.TEMPORAL_API_BASE_URL);
-		const temporalDataQuery = queryTemporalData(temporalApi);
+		// ctx.reply("Estoy pensando... Podría tardar hasta un minuto");
 
-		const nasaMeasurements = await temporalDataQuery({
-			parameters: [
-				EClimateParameters.T2M, // Temperature at 2 meters (°C)
-				EClimateParameters.TS, // Earth Skin Temperature (°C)
-				EClimateParameters.PRECTOTCORR, // Precipitation (mm/day)
-				EClimateParameters.QV2M, // Specific Humidity at 2 meters (g/kg)
-				EClimateParameters.WS2M, // Wind Speed at 2 meters (m/s)
-				EClimateParameters.GWETTOP, // Surface Soil Wetness (1)
-				EClimateParameters.GWETROOT, // Root Zone Soil Wetness (1)
-				EClimateParameters.GWETPROF, // Profile Soil Moisture (1)
-			],
-			latitude: interpretedUserMessage.intention.location.latitude,
-			longitude: interpretedUserMessage.intention.location.longitude,
-			start: new Date(2000, 1, 1),
-			end: new Date(),
-			interval: "daily",
-		});
+		// // STAGE 2: RETRIEVE NASA DATA
+		// const temporalApi = new TemporalApi(env.TEMPORAL_API_BASE_URL);
+		// const temporalDataQuery = queryTemporalData(temporalApi);
 
-		if (!nasaMeasurements) throw new Error("FAILED TO RETRIEVE DATA FROM NASA");
+		// const nasaMeasurements = await temporalDataQuery({
+		// 	parameters: [
+		// 		EClimateParameters.T2M, // Temperature at 2 meters (°C)
+		// 		EClimateParameters.TS, // Earth Skin Temperature (°C)
+		// 		EClimateParameters.PRECTOTCORR, // Precipitation (mm/day)
+		// 		EClimateParameters.QV2M, // Specific Humidity at 2 meters (g/kg)
+		// 		EClimateParameters.WS2M, // Wind Speed at 2 meters (m/s)
+		// 		EClimateParameters.GWETTOP, // Surface Soil Wetness (1)
+		// 		EClimateParameters.GWETROOT, // Root Zone Soil Wetness (1)
+		// 		EClimateParameters.GWETPROF, // Profile Soil Moisture (1)
+		// 	],
+		// 	latitude: interpretedUserMessage.intention.location.latitude,
+		// 	longitude: interpretedUserMessage.intention.location.longitude,
+		// 	start: new Date(2000, 1, 1),
+		// 	end: new Date(),
+		// 	interval: "daily",
+		// });
+		// console.log("NASA MEASUREMENTS", nasaMeasurements);
 
-		const stages = interpretedUserMessage.intention.stages;
+		// if (!nasaMeasurements) throw new Error("FAILED TO RETRIEVE DATA FROM NASA");
 
-		const measurementsGroupedByStage = groupAndAverageMeasurementsByStages(
-			stages,
-			nasaMeasurements,
-		);
+		// const stages = interpretedUserMessage.intention.stages;
 
-		// STAGE 3: ANSWER
+		// const measurementsGroupedByStage = groupAndAverageMeasurementsByStages(
+		// 	stages,
+		// 	nasaMeasurements,
+		// );
 
-		const isFirstMessage = true; // Receive this
-		const answer = await interpretViabilityForCropSowing(
-			interpretedUserMessage.intention,
-			{
-				...measurementsGroupedByStage,
-			},
-			isFirstMessage,
-		);
+		// // STAGE 3: ANSWER
+
+		// const isFirstMessage = true; // Receive this
+		// const answer = await interpretViabilityForCropSowing(
+		// 	interpretedUserMessage.intention,
+		// 	{
+		// 		...measurementsGroupedByStage,
+		// 	},
+		// 	isFirstMessage,
+		// );
+
+		// ctx.reply(answer.toString());
 	});
+
 	bot.start();
+	console.log("Bot started!");
 }
 
 startServer().catch((err) => {
