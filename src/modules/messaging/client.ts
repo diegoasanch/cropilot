@@ -1,8 +1,14 @@
-import { sendResponse } from "./use-cases/send-response.js";
-import { TelegramApi } from "./infra/telegram-api.js";
+import { ChatsRepository } from "./infra/chats.js";
+import { getOrCreateChat } from "./use-cases/get-or-create-chat.js";
+// import { closeChat } from "./use-cases/close-chat.js";
 
-const telegramApi = new TelegramApi("TOKEN");
+import { initDb } from "@/db/db.js";
+export async function getClient() {
+	const db = await initDb();
+	const chatsRepository = new ChatsRepository(db);
 
-export const messaging = {
-	sendResponse: sendResponse(telegramApi),
-};
+	return {
+		getOrCreateChat: getOrCreateChat({ chatsRepository }),
+		// closeChat: closeChat({ chatsRepository }),
+	};
+}
