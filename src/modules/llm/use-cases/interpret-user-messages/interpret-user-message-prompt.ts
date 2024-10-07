@@ -11,7 +11,7 @@ export const interpretUserMessagePrompt = new PromptTemplate({
       - Date
       - Language (INFERRED BY THE MESSAGE)
 
-      If any of the info above is missing in the message respond with this JSON:
+      If any of the info above is missing or location is not exactly defined as latitude and longitude in the message respond with this JSON:
 
       {{
         "status": "needs_more_info",
