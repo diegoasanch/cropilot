@@ -1,0 +1,1 @@
+ALTER TABLE "conversation" ADD COLUMN "user_stopped" boolean DEFAULT false NOT NULL;

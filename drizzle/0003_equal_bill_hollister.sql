@@ -1,0 +1,1 @@
+ALTER TABLE "user" ALTER COLUMN "external_id" SET DATA TYPE text;

@@ -3,7 +3,6 @@ import {
 	serial,
 	text,
 	timestamp,
-	varchar,
 	boolean,
 	pgEnum,
 } from "drizzle-orm/pg-core";
@@ -11,7 +10,7 @@ import { relations } from "drizzle-orm";
 
 export const user = pgTable("user", {
 	id: serial("id").primaryKey(),
-	phone: varchar("phone", { length: 256 }).notNull().unique(),
+	externalId: text("external_id").notNull().unique(),
 	fullName: text("full_name").notNull(),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	updatedAt: timestamp("updated_at")
@@ -31,6 +30,7 @@ export const conversation = pgTable("conversation", {
 		.notNull()
 		.references(() => user.id),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
+	userStopped: boolean("user_stopped").notNull().default(false),
 });
 
 export const conversationRelations = relations(
