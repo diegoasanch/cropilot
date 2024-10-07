@@ -1,6 +1,10 @@
 import type { ChatsRepository } from "../infra/chats.js";
 
-export function closeChat(chatsRepository: ChatsRepository) {
+export type CloseChatDeps = {
+	chatsRepository: ChatsRepository;
+};
+
+export function closeChat({ chatsRepository }: CloseChatDeps) {
 	return async (userId: string) => {
 		const openChat = await chatsRepository.findOpenConversation(userId);
 		if (openChat) {

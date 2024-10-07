@@ -1,6 +1,9 @@
 import { env } from "./env.js";
+<<<<<<< Updated upstream
 import { getClient } from "./modules/messaging/client.js";
 
+=======
+>>>>>>> Stashed changes
 import { Bot } from "grammy";
 
 async function startServer() {
@@ -35,6 +38,7 @@ async function startServer() {
 		ctx.reply(`Your location: ${ctx.message.location}`);
 	});
 
+<<<<<<< Updated upstream
 	bot.start();
 
 	// const fastify = Fastify({
@@ -106,6 +110,29 @@ async function startServer() {
 	// 		process.exit(1);
 	// 	}
 	// });
+=======
+	const bot = new Bot(env.TELEGRAM_BOT_TOKEN);
+
+	bot.command("start", (ctx) => {
+		ctx.reply("Welcome to Cropilot!");
+	});
+
+	bot.command("new_chat", (ctx) => {
+		ctx.reply("New chat started!");
+	});
+
+	bot.on("message:text", (ctx) => {
+		console.log(ctx.message);
+		ctx.reply(`You said: ${ctx.message.text}`);
+	});
+
+	bot.on("message:location", (ctx) => {
+		console.log(ctx.message);
+		ctx.reply(`Your location: ${ctx.message.location}`);
+	});
+
+	bot.start();
+>>>>>>> Stashed changes
 }
 
 startServer().catch((err) => {
