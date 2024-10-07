@@ -50,12 +50,18 @@ export const messageTypeEnum = pgEnum("message_type", [
 	"location",
 ]);
 
+export const messageInitiatorEnum = pgEnum("message_initiator", [
+	"user",
+	"assistant",
+]);
+
 export const message = pgTable("message", {
 	id: serial("id").primaryKey(),
 	conversationId: serial("conversation_id")
 		.notNull()
 		.references(() => conversation.id),
 	system: boolean("system").notNull().default(false),
+	initiator: messageInitiatorEnum("initiator").notNull().default("user"),
 	content: text("content").notNull(),
 	messageType: messageTypeEnum("message_type").notNull().default("text"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
