@@ -11,11 +11,11 @@ export const interpretUserMessagePrompt = new PromptTemplate({
       - Date
       - Language (INFERRED BY THE MESSAGE)
 
-      If any of the info above is missing in the message respond with this JSON:
+      If any of the info above is missing or location is not exactly defined as latitude and longitude in the message respond with this JSON:
 
       {{
         "status": "needs_more_info",
-         "message": "..." // Specify the missing data, in the same language as the user's message
+         "message": "..." // Specify the missing data, in the same language as the user's message and give a friendly explanation on what you are good for given this prompt
       }}
 
       Also, provide the optimal climate data for the different stages of the crop and the dates of each stage.
