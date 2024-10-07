@@ -5,7 +5,9 @@ import { getChatMessages } from "./use-cases/get-chat-messages.js";
 import { closeChat } from "./use-cases/close-chat.js";
 import { saveMessage } from "./use-cases/save-message.js";
 
-export async function getClient() {
+export type MessagesClient = Awaited<ReturnType<typeof getMessagesClient>>;
+
+export async function getMessagesClient() {
 	const db = await initDb();
 	const chatsRepository = new ChatsRepository(db);
 	const getOrCreateChatUseCase = getOrCreateChat({ chatsRepository });

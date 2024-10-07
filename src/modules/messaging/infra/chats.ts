@@ -12,7 +12,8 @@ export type CreateMessageInput = {
 	content: string;
 	messageType: "text" | "image" | "location";
 	conversationId: number;
-	system?: boolean;
+	system: boolean;
+	initiator: "user" | "assistant";
 };
 
 export class ChatsRepository {
@@ -60,7 +61,10 @@ export class ChatsRepository {
 					and(
 						eq(user.externalId, userExternalId),
 						eq(conversation.userStopped, false),
-						gt(message.createdAt, dayjs().subtract(5, "minutes").toDate()),
+						gt(
+							message.createdAt,
+							dayjs().utc().subtract(5, "minutes").toDate(),
+						),
 					),
 				)
 				.orderBy(desc(message.createdAt))

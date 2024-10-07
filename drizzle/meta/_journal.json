@@ -36,6 +36,13 @@
       "when": 1728258830841,
       "tag": "0004_fair_marvel_apes",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1728284467844,
+      "tag": "0005_opposite_frightful_four",
+      "breakpoints": true
     }
   ]
 }
