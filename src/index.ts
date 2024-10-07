@@ -49,8 +49,6 @@ async function startServer() {
 	telegram.updates.startPolling();
 }
 
-console.log("evaluating...");
-
 async function handleMessage(
 	ctx: any,
 	messageContent: string,
@@ -75,6 +73,8 @@ async function handleMessage(
 	}, "");
 	chatHistory += `\n- user-message:${messageType} ${messageContent}`;
 
+	console.log(chatHistory);
+
 	const interpretedUserMessage = await interpretUserMessage(chatHistory);
 	if (!interpretedUserMessage) {
 		ctx.reply("Error interpreting your message");
@@ -86,14 +86,14 @@ async function handleMessage(
 		return;
 	}
 
-	await ctx.reply("Estoy pensando...");
+	await ctx.send("Estoy pensando...");
 	await ctx.sendChatAction("typing", { suppress: true });
 
 	const result = await processMessage(
 		interpretedUserMessage.intention,
 		chat.messages.length === 0,
 	);
-	ctx.reply(result);
+	ctx.send(result, { parse_mode: "markdown" });
 }
 
 async function processMessage(
@@ -142,8 +142,6 @@ async function processMessage(
 
 	return answer;
 }
-
-console.log("evaluated...");
 
 startServer().catch((err) => {
 	console.error("Failed to start server:", err);

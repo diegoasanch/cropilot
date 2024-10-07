@@ -16,7 +16,7 @@ export async function interpretUserMessage(
 	];
 	try {
 		const model = new ChatOpenAI({
-			model: "gpt-4o",
+			model: "gpt-3.5-turbo",
 			apiKey: env.OPENAI_API_KEY,
 			modelKwargs: {
 				response_format: { type: "json_object" },
@@ -24,10 +24,11 @@ export async function interpretUserMessage(
 		});
 
 		const response = await model.invoke(messages);
-
-		return (await JSON.parse(
+		const parsedResponse = JSON.parse(
 			response.content.toString(),
-		)) as UserIntentionResponse;
+		) as UserIntentionResponse;
+
+		return parsedResponse;
 	} catch (e) {
 		console.error(e);
 	}
