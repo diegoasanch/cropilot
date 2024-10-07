@@ -1,3 +1,12 @@
+export type UserIntentionResponse = 
+|{
+  status: "success";
+  intention: InterpretedUserMessage; 
+}
+| {
+  status: "needs_more_info";
+  message: string;	
+};
 export type InterpretedUserMessage = {
   location: {
     latitude: number;

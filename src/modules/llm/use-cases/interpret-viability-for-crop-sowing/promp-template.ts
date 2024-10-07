@@ -2,13 +2,13 @@ import { PromptTemplate } from "@langchain/core/prompts";
 
 // Prompt Template
 export const viabilityAnalysisPrompt = new PromptTemplate({
-  inputVariables: ["crop", "language", "stagesInfo"],
+  inputVariables: ["crop", "language", "stagesInfo", "isFirstMessage"],
   template: `
 You are an expert agronomist.
 
-Analyze the following data to determine if it's a good idea to plant {crop} at the specified time and location. Provide your recommendation in {language}.
+Analyze the following data to determine if it's a good idea do the user request about the crop {crop} at the specified time and location. Provide your recommendation in {language}.
 
-Your response should start with "Hi, thanks for using Cropilot" in {language}.
+If {isFirstMessage} Your response should start with first message is "Hi, thanks for using Cropilot" in {language}.
 
 **Output Format (Please follow this structure exactly):**
 
