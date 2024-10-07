@@ -10,12 +10,14 @@
 		"dev": "nodemon --watch 'src/**' --ext 'ts,json' --ignore 'src/**/*.test.ts' --exec \"pnpm run build && pnpm run start\"",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"db:generate": "drizzle-kit generate",
-		"db:migrate": "drizzle-kit migrate"
+		"db:migrate": "drizzle-kit migrate",
+		"start:prof": "pnpm run build && 0x dist/index.mjs"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"0x": "^5.7.0",
 		"@langchain/core": "^0.3.7",
 		"@langchain/openai": "^0.3.5",
 		"@t3-oss/env-core": "^0.11.1",
@@ -26,6 +28,8 @@
 		"grammy": "^1.30.0",
 		"pg": "^8.13.0",
 		"postgres": "^3.4.4",
+		"puregram": "^2.26.2",
+		"socks-proxy-agent": "^8.0.4",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
