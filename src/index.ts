@@ -71,11 +71,14 @@ async function startServer() {
     );
 
     // STAGE 3: ANSWER
+  
+    const isFirstMessage = true // Receive this
     const answer = await interpretViabilityForCropSowing(
       interpretedUserMessage.intention,
       {
         ...measurementsGroupedByStage,
-      }
+      },
+      isFirstMessage
     );
 
     reply.send({
