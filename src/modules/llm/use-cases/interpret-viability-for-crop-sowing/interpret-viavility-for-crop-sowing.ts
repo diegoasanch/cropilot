@@ -9,7 +9,8 @@ import { formatStagesInfo } from "./format-stages-info.js";
 // Main Function
 export async function interpretViabilityForCropSowing(
   interpretedUserMessage: InterpretedUserMessage,
-  measurementsGroupedByStage: StagedMeasurements
+  measurementsGroupedByStage: StagedMeasurements,
+  isFirstMessage: boolean
 ): Promise<MessageContent> {
   const { crop, language } = interpretedUserMessage;
 
@@ -22,6 +23,7 @@ export async function interpretViabilityForCropSowing(
     crop,
     language,
     stagesInfo,
+    isFirstMessage
   });
 
   const messages = [new SystemMessage(formattedPrompt)];

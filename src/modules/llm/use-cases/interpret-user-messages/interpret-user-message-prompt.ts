@@ -8,11 +8,22 @@ export const interpretUserMessagePrompt = new PromptTemplate({
       Extract the following information:
       - Location (latitude and longitude)
       - Crop to be planted
-      - Date and time
-      - Language
+      - Date
+      - Language (INFERRED BY THE MESSAGE)
+
+      If any of the info above is missing in the message respond with this JSON:
+
+      {{
+        "status": "needs_more_info",
+         "message": "..." // Specify the missing data, in the same language as the user's message
+      }}
+
       Also, provide the optimal climate data for the different stages of the crop and the dates of each stage.
       Output the result as a JSON object with the following structure:
+      
       {{
+      "status": "success",
+      "intention": {{
         "location": {{
           "latitude": ...,
           "longitude": ...
@@ -39,5 +50,6 @@ export const interpretUserMessagePrompt = new PromptTemplate({
           ...
         ]
       }}
+    }}
       `,
 });
