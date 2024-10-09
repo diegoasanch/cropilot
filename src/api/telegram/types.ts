@@ -46,7 +46,12 @@ export type TelegramApi = {
 	reply: (message: string, options?: TelegramOptions) => Promise<void>;
 	send: (action: string, options?: TelegramOptions) => Promise<void>;
 	sendChatAction: (action: string, options?: TelegramOptions) => Promise<void>;
+	setLanguage: (language: string) => Promise<void>;
 };
 
 export type TelegramContext = TelegramApi &
 	(TelegramMessage | TelegramLocation | TelegramCommand);
+
+export type TelegramMessageContext = TelegramApi & TelegramMessage;
+export type TelegramLocationContext = TelegramApi & TelegramLocation;
+export type TelegramCommandContext = TelegramApi & TelegramCommand;

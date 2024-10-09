@@ -1,0 +1,9 @@
+{
+	"welcome": "¡Bienvenido a Cropilot!",
+	"newChatStarted": "¡Nueva conversación iniciada!",
+	"unknownCommand": "Comando desconocido",
+	"errorInterpretingMessage": "Error al interpretar tu mensaje",
+	"errorProcessingMessage": "Error al procesar tu mensaje",
+	"thinking": "Estoy pensando...",
+	"errorGettingLocation": "Error al obtener tu ubicación"
+}

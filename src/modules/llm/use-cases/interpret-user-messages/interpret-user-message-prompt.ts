@@ -21,7 +21,8 @@ export const interpretUserMessagePrompt = new PromptTemplate({
       - If any of the info above is missing or location is not exactly defined as latitude and longitude in the message respond with this JSON:
       {{
         "status": "needs_more_info",
-        "message": "..."
+        "message": "...",
+        "language": "..." // Inferred from the message, two letter code for using with i18n
       }}
 
       Also, provide the optimal climate data for the different stages of the crop and the dates of each stage.
@@ -36,7 +37,7 @@ export const interpretUserMessagePrompt = new PromptTemplate({
         }},
         "crop": "...",
         "date": "...",
-        "language": "...",
+        "language": "..." // Inferred from the message, two letter code for using with i18n
         "stages": [
           {{
             "stage": "...",
