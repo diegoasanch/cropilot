@@ -9,17 +9,12 @@ import { formatStagesInfo } from "./format-stages-info.js";
 type ViabilityForCropSowingInput = {
 	interpretedUserMessage: InterpretedUserMessage;
 	measurementsGroupedByStage: StagedMeasurements;
-	isFirstMessage: boolean;
 };
 
 export function interpretViabilityForCropSowing(
 	model: OpenAI<ChatOpenAICallOptions>,
 ): (input: ViabilityForCropSowingInput) => Promise<MessageContent> {
-	return async ({
-		interpretedUserMessage,
-		measurementsGroupedByStage,
-		isFirstMessage,
-	}) => {
+	return async ({ interpretedUserMessage, measurementsGroupedByStage }) => {
 		const { crop, language } = interpretedUserMessage;
 
 		const stagesInfo = formatStagesInfo(
@@ -31,16 +26,13 @@ export function interpretViabilityForCropSowing(
 			crop,
 			language,
 			stagesInfo,
-			isFirstMessage,
 		});
 
 		const messages = [new SystemMessage(formattedPrompt)];
 
 		try {
 			const response = await model.invoke(messages);
-			console.log(response.content);
-
-			return response.content as MessageContent;
+			return response.content.toString() as MessageContent;
 		} catch (error) {
 			console.error("Error during viability analysis:", error);
 			throw error;
