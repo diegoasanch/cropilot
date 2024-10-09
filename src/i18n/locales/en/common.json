@@ -1,0 +1,9 @@
+{
+	"welcome": "🌱 Welcome to Cropilot! 🚀\n\nI'm here to help you make better crop decisions using NASA's earth data. Just share:\n\n\t-\t🌾 Your crop\n\t-\t📅 Planting time\n\t-\t📍 Location (coordinates)\n\nLet's grow smarter together! 🌻",
+	"newChatStarted": "New chat started!",
+	"unknownCommand": "Unknown command",
+	"errorInterpretingMessage": "Error interpreting your message",
+	"errorProcessingMessage": "Error processing your message",
+	"thinking": "I'm thinking...",
+	"errorGettingLocation": "Error getting your location"
+}

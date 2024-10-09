@@ -1,6 +1,5 @@
 import type {
-	TelegramApi,
-	TelegramCommand,
+	TelegramCommandContext,
 	TelegramContext,
 	TelegramOptions,
 } from "./telegram/types.js";
@@ -12,6 +11,7 @@ import { queryTemporalData } from "@/modules/nasa/use-cases/temporal-query.js";
 import { EClimateParameters } from "@/modules/nasa/infra/t-temporal-api.js";
 import { env } from "@/env.js";
 import { groupAndAverageMeasurementsByStages } from "@/modules/nasa/utils/group-average-measurements-by-stages.js";
+import i18next from "@/i18n/index.js";
 
 async function send({
 	ctx,
@@ -40,19 +40,20 @@ export async function handleCommand({
 	ctx,
 	messages,
 }: {
-	ctx: TelegramApi & TelegramCommand;
+	ctx: TelegramCommandContext;
 	messages: MessagesClient;
 }) {
 	const senderId = ctx.from.id;
 	if (ctx.text === "/start") {
-		ctx.reply("Welcome to Cropilot!");
+		if (senderId) await messages.closeChat(senderId.toString());
+		ctx.send(i18next.t("welcome"));
 	} else if (ctx.text === "/new") {
 		if (senderId) {
 			await messages.closeChat(senderId.toString());
-			ctx.send("New chat started!");
+			ctx.send(i18next.t("newChatStarted"));
 		}
 	} else {
-		ctx.reply("Unknown command");
+		ctx.reply(i18next.t("unknownCommand"));
 	}
 }
 
@@ -95,10 +96,12 @@ export async function handleMessage(
 			userMessage: messageContent,
 			chatHistory,
 		});
+
 		if (!interpretedUserMessage) {
-			ctx.reply("Error interpreting your message");
+			ctx.reply(i18next.t("errorInterpretingMessage"));
 			throw new Error("Error interpreting your message");
 		}
+		ctx.setLanguage(interpretedUserMessage.language);
 
 		if (interpretedUserMessage.status === "needs_more_info") {
 			return send({
@@ -109,7 +112,7 @@ export async function handleMessage(
 			});
 		}
 
-		ctx.send("Estoy pensando...");
+		ctx.send(i18next.t("thinking"));
 		const result = await processMessage(interpretedUserMessage.intention, llm);
 
 		await send({
@@ -121,7 +124,7 @@ export async function handleMessage(
 		});
 	} catch (error) {
 		console.error("Error processing message:", error);
-		ctx.reply("Error processing your message");
+		ctx.reply(i18next.t("errorProcessingMessage"));
 	} finally {
 		clearInterval(typingId);
 	}
