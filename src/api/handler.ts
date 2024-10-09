@@ -77,12 +77,14 @@ export async function handleMessage(
 		initiator: "user",
 	});
 
-	let chatHistory = chat.messages.reduce((acc, msg) => {
-		return `${acc}\n- ${msg.initiator}:${msg.messageType} ${msg.content}`;
-	}, "");
-	chatHistory += `\n- user:${messageType} ${messageContent}`;
-
-	console.log(chatHistory);
+	const chatHistory = chat.messages.map((msg) => ({
+		content: msg.content,
+		role: msg.initiator === "user" ? ("user" as const) : ("system" as const),
+	}));
+	chatHistory.push({
+		content: messageContent,
+		role: "user" as const,
+	});
 
 	const interpretedUserMessage = await llm.interpretUserMessage({
 		userMessage: messageContent,

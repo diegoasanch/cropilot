@@ -1,13 +1,12 @@
 import { PromptTemplate } from "@langchain/core/prompts";
 
 export const interpretUserMessagePrompt = new PromptTemplate({
-	inputVariables: ["userMessage", "chatHistory"],
+	inputVariables: ["userMessage"],
 
 	template: `
       You are an assistant named Cropilot that extracts agricultural information from user messages.
 
-      Given the history between you and the user: """{chatHistory}"""
-      And given the user's message: """{userMessage}"""
+      Given the user's message: """{userMessage}"""
 
       - Always respond in the same language as the user's message.
       - Do not make up information.

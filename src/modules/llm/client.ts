@@ -11,7 +11,7 @@ export type LlmClient = Awaited<ReturnType<typeof getLlmClient>>;
 
 export async function getLlmClient() {
 	const model = new ChatOpenAI({
-		model: "gpt-4o-mini",
+		model: "gpt-4o",
 		apiKey: env.OPENAI_API_KEY,
 		modelKwargs: {
 			response_format: { type: "json_object" },
