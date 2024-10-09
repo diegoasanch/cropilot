@@ -5,21 +5,27 @@ import { Telegram } from "puregram";
 import type {
 	TelegramCommandContext,
 	TelegramContext,
+	TelegramPayload,
 	TelegramMessageContext,
+	TelegramPayloadContext,
 } from "./api/telegram/types.js";
 import { isCommand, isMessage } from "./api/telegram/validators.js";
 import * as api from "./api/handler.js";
 import i18next from "./i18n/index.js";
 
-function getContext<T>(
-	msgApi: T,
-): T & { setLanguage: (language: string) => void } {
-	return {
-		...msgApi,
-		setLanguage: (language: string) => {
+function getContext(ctx: unknown) {
+	Object.defineProperty(ctx, "setLanguage", {
+		value: (language: string) => {
 			i18next.changeLanguage(language);
 		},
-	};
+	});
+}
+
+function getLanguageCode(
+	ctx: TelegramMessageContext | TelegramCommandContext | TelegramPayload,
+) {
+	if ("payload" in ctx) return ctx.payload?.from?.language_code ?? "en";
+	return ctx?.from?.languageCode ?? "en";
 }
 
 async function startServer() {
@@ -27,13 +33,20 @@ async function startServer() {
 	const telegram = Telegram.fromToken(env.TELEGRAM_BOT_TOKEN);
 	const llm = await getLlmClient();
 
+	telegram.updates.use(async (ctx) => {
+		getContext(ctx);
+	});
+
 	telegram.updates.on(
 		"message",
-		async (msg: TelegramMessageContext | TelegramCommandContext) => {
-			const ctx = getContext(msg);
-
-			console.log("ctx", ctx);
-			ctx.setLanguage(ctx.from.languageCode);
+		async (
+			ctx:
+				| TelegramMessageContext
+				| TelegramCommandContext
+				| TelegramPayloadContext,
+		) => {
+			console.log("msg:ctx", ctx);
+			ctx.setLanguage(getLanguageCode(ctx));
 
 			if (isCommand(ctx)) return await api.handleCommand({ ctx, messages });
 			if (isMessage(ctx))
@@ -47,10 +60,8 @@ async function startServer() {
 		},
 	);
 
-	telegram.updates.on("location", async (_ctx: TelegramContext) => {
-		const ctx = getContext(_ctx);
-
-		console.log("ctx", ctx);
+	telegram.updates.on("location", async (ctx: TelegramContext) => {
+		console.log("location:ctx", ctx);
 		ctx.setLanguage(ctx.from.languageCode);
 
 		if (!("eventLocation" in ctx)) {

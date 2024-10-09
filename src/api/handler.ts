@@ -45,6 +45,7 @@ export async function handleCommand({
 }) {
 	const senderId = ctx.from.id;
 	if (ctx.text === "/start") {
+		if (senderId) await messages.closeChat(senderId.toString());
 		ctx.send(i18next.t("welcome"));
 	} else if (ctx.text === "/new") {
 		if (senderId) {

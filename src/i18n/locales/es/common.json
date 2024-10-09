@@ -1,5 +1,5 @@
 {
-	"welcome": "¡Bienvenido a Cropilot!",
+	"welcome": "🌱 ¡Bienvenido a Cropilot! 🚀\n\nEstoy aquí para ayudarte a tomar mejores decisiones sobre tus cultivos utilizando los datos terrestres de la NASA. Solo comparte:\n\n\t-\t🌾 Tu cultivo\n\t-\t📅 Tiempo de siembra\n\t-\t📍 Ubicación (coordenadas)\n\n¡Cultivemos de manera más inteligente juntos! 🌻",
 	"newChatStarted": "¡Nueva conversación iniciada!",
 	"unknownCommand": "Comando desconocido",
 	"errorInterpretingMessage": "Error al interpretar tu mensaje",

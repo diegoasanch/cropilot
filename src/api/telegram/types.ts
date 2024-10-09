@@ -38,6 +38,41 @@ export type TelegramCommand = {
 	text: string;
 };
 
+export type TelegramPayload = {
+	updateType: "message";
+	updateId: number;
+	update: {
+		update_id: number;
+		message: {
+			message_id: number;
+			from: TelegramUser;
+			chat: TelegramChat;
+			date: number;
+			text: string;
+			entities: [{ type: string }];
+		};
+	};
+	payload: {
+		message_id: number;
+		from: {
+			id: number;
+			is_bot: boolean;
+			first_name: string;
+			last_name: string;
+			language_code: string;
+		};
+		chat: {
+			id: number;
+			first_name: string;
+			last_name: string;
+			type: string;
+		};
+		date: number;
+		text: string;
+		entities: [{ type: string }];
+	};
+};
+
 export type TelegramOptions = {
 	[key: string]: unknown;
 };
@@ -55,3 +90,4 @@ export type TelegramContext = TelegramApi &
 export type TelegramMessageContext = TelegramApi & TelegramMessage;
 export type TelegramLocationContext = TelegramApi & TelegramLocation;
 export type TelegramCommandContext = TelegramApi & TelegramCommand;
+export type TelegramPayloadContext = TelegramApi & TelegramPayload;
