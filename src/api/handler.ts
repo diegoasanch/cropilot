@@ -63,75 +63,72 @@ export async function handleMessage(
 	messages: MessagesClient,
 	llm: LlmClient,
 ) {
-	await ctx.sendChatAction("typing", { suppress: true });
-
-	const chat = await messages.getChatMessages({
-		userExternalId: ctx.from.id.toString(),
-		userFullName: `${ctx.from.firstName} ${ctx.from.lastName}`,
-	});
-	await messages.saveMessage({
-		content: messageContent,
-		messageType,
-		conversationId: chat.conversationId,
-		system: false,
-		initiator: "user",
-	});
-
-	let chatHistory = chat.messages.reduce((acc, msg) => {
-		return `${acc}\n- ${msg.initiator}:${msg.messageType} ${msg.content}`;
-	}, "");
-	chatHistory += `\n- user:${messageType} ${messageContent}`;
-
-	console.log(chatHistory);
-
-	const interpretedUserMessage = await llm.interpretUserMessage({
-		userMessage: messageContent,
-		chatHistory,
-	});
-	if (!interpretedUserMessage) {
-		ctx.reply("Error interpreting your message");
-		throw new Error("Error interpreting your message");
-	}
-
-	if (interpretedUserMessage.status === "needs_more_info") {
-		await send({
-			ctx,
-			message: interpretedUserMessage.message,
-			messages,
-			conversationId: chat.conversationId,
-		});
-		return;
-	}
-
-	await ctx.send("Estoy pensando...");
-	const setTyping = async () =>
-		ctx.sendChatAction("typing", { suppress: true });
-	await setTyping();
-
-	const result = await processMessage(
-		interpretedUserMessage.intention,
-		chat.messages.length === 0,
-		setTyping,
-		llm,
+	// Send a typing action every second, this interval is cleared in the finally block
+	const typingId = setInterval(
+		async () => await ctx.sendChatAction("typing", { suppress: true }),
+		1 * 1000,
 	);
 
-	await send({
-		ctx,
-		message: result.toString(),
-		messages,
-		conversationId: chat.conversationId,
-		options: { parse_mode: "markdownV2" },
-	});
+	try {
+		const chat = await messages.getChatMessages({
+			userExternalId: ctx.from.id.toString(),
+			userFullName: `${ctx.from.firstName} ${ctx.from.lastName}`,
+		});
+		await messages.saveMessage({
+			content: messageContent,
+			messageType,
+			conversationId: chat.conversationId,
+			system: false,
+			initiator: "user",
+		});
+
+		const chatHistory = chat.messages.map((msg) => ({
+			content: msg.content,
+			role: msg.initiator === "user" ? ("user" as const) : ("system" as const),
+		}));
+		chatHistory.push({
+			content: messageContent,
+			role: "user" as const,
+		});
+
+		const interpretedUserMessage = await llm.interpretUserMessage({
+			userMessage: messageContent,
+			chatHistory,
+		});
+		if (!interpretedUserMessage) {
+			ctx.reply("Error interpreting your message");
+			throw new Error("Error interpreting your message");
+		}
+
+		if (interpretedUserMessage.status === "needs_more_info") {
+			return send({
+				ctx,
+				message: interpretedUserMessage.message,
+				messages,
+				conversationId: chat.conversationId,
+			});
+		}
+
+		ctx.send("Estoy pensando...");
+		const result = await processMessage(interpretedUserMessage.intention, llm);
+
+		await send({
+			ctx,
+			message: result.toString(),
+			messages,
+			conversationId: chat.conversationId,
+			options: { parse_mode: "HTML" },
+		});
+	} catch (error) {
+		console.error("Error processing message:", error);
+		ctx.reply("Error processing your message");
+	} finally {
+		clearInterval(typingId);
+	}
 }
 
-async function processMessage(
-	message: InterpretedUserMessage,
-	isFirstMessage: boolean,
-	setTyping: () => Promise<void>,
-	llm: LlmClient,
-) {
+async function processMessage(message: InterpretedUserMessage, llm: LlmClient) {
 	// STAGE 2: RETRIEVE NASA DATA
-	await setTyping();
 	const temporalApi = new TemporalApi(env.TEMPORAL_API_BASE_URL);
 	const temporalDataQuery = queryTemporalData(temporalApi);
 
@@ -157,18 +154,15 @@ async function processMessage(
 
 	const stages = message.stages;
 
-	await setTyping();
 	const measurementsGroupedByStage = groupAndAverageMeasurementsByStages(
 		stages,
 		nasaMeasurements,
 	);
 
 	// STAGE 3: ANSWER
-	await setTyping();
 	const answer = await llm.interpretViabilityForCropSowing({
 		interpretedUserMessage: message,
 		measurementsGroupedByStage,
-		isFirstMessage,
 	});
 
 	return answer;

@@ -5,7 +5,12 @@ import { interpretUserMessagePrompt } from "./interpret-user-message-prompt.js";
 
 type InterpretUserMessageInput = {
 	userMessage: string;
-	chatHistory: string;
+	chatHistory: Message[];
+};
+
+type Message = {
+	content: string;
+	role: "user" | "system";
 };
 
 export function interpretUserMessage(
@@ -13,13 +18,18 @@ export function interpretUserMessage(
 ): (
 	input: InterpretUserMessageInput,
 ) => Promise<UserIntentionResponse | undefined> {
-	return async ({ userMessage, chatHistory }) => {
+	return async ({ chatHistory, userMessage }) => {
 		const formattedPrompt = await interpretUserMessagePrompt.format({
 			userMessage,
-			chatHistory,
 		});
+
 		const messages = [
 			new SystemMessage(formattedPrompt),
+			...chatHistory.map((msg) =>
+				msg.role === "user"
+					? new HumanMessage(msg.content)
+					: new SystemMessage(msg.content),
+			),
 			new HumanMessage(userMessage),
 		];
 		try {
