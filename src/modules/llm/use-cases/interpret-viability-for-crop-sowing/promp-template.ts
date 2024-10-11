@@ -48,7 +48,7 @@ Recommendations
   - All <, > and & symbols that are not a part of a tag or an HTML entity must be replaced with the corresponding HTML entities (< with &lt;, > with &gt; and & with &amp;).
   - All numerical HTML entities are supported.
   - The API currently supports only the following named HTML entities: &lt;, &gt;, &amp; and &quot;.
-  - Use • for bullet points.
+  - Use the character "•" instead of dashes for bullet points.
 
 *Data:*
 

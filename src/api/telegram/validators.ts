@@ -1,10 +1,13 @@
 import type {
-	TelegramCommand,
-	TelegramLocation,
-	TelegramMessage,
+	TelegramApi,
+	TelegramCommandContext,
+	TelegramLocationContext,
+	TelegramMessageContext,
 } from "./types.js";
 
-export function isCommand<T>(ctx: T): ctx is T & TelegramCommand {
+export function isCommand<T extends TelegramApi>(
+	ctx: T,
+): ctx is T & TelegramCommandContext {
 	if (
 		!!ctx &&
 		typeof ctx === "object" &&
@@ -16,14 +19,14 @@ export function isCommand<T>(ctx: T): ctx is T & TelegramCommand {
 	return false;
 }
 
-export function isLocation<T>(ctx: T): ctx is T & TelegramLocation {
+export function isLocation<T>(ctx: T): ctx is T & TelegramLocationContext {
 	if (!!ctx && typeof ctx === "object" && "eventLocation" in ctx) {
 		return true;
 	}
 	return false;
 }
 
-export function isMessage<T>(ctx: T): ctx is T & TelegramMessage {
+export function isMessage<T>(ctx: T): ctx is T & TelegramMessageContext {
 	if (!!ctx && typeof ctx === "object" && "text" in ctx) {
 		return true;
 	}
