@@ -70,9 +70,9 @@ Install dependencies:
 
 ```bash
 pnpm install
-Set up environment variables in a .env file:
-```
 
+```
+2. Set up environment variables in a .env file:
 ```bash
 DATABASE_URL="postgresql://cropilot_user:cropilot_local@localhost:5432/cropilot"
 TEMPORAL_API_BASE_URL="https://power.larc.nasa.gov/api/"
